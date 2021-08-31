@@ -1,5 +1,6 @@
 package com.start.springcloud.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.io.Serializable;
@@ -12,9 +13,10 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Payment implements Serializable {
 
-    private long id;
+    private Long id;
 
     private String serial;
 
