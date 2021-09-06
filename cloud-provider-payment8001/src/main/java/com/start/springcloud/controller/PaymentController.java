@@ -1,31 +1,22 @@
 package com.start.springcloud.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.start.springcloud.entities.CommonResult;
 import com.start.springcloud.entities.Payment;
 import com.start.springcloud.service.PaymentService;
 import com.start.springcloud.service.impl.TestService;
+import jodd.time.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -136,4 +127,41 @@ public class PaymentController {
 //        Type type = new TypeToken<ArrayList<Payment>>(){}.getType();
 //        gson.fromJson(jsonArray, type);
 //    }
+
+    public static void main(String[] args) {
+        String lockKey = "paymentKey";
+        long waitTimeout = 30;
+        long leaseTime = 100;
+        // 1.构造redisson实现分布式锁必要的Config
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://123.60.34.168:6379").setPassword("fs341225").setDatabase(0);
+        // 2.构造RedissonClient
+        RedissonClient redissonClient = Redisson.create(config);
+        // 3.获取锁对象实例（无法保证是按线程的顺序获取到）
+        RLock rLock = redissonClient.getLock(lockKey);
+        try {
+            /**
+             * 4.尝试获取锁
+             * waitTimeout 尝试获取锁的最大等待时间，超过这个值，则认为获取锁失败
+             * leaseTime   锁的持有时间,超过这个时间锁会自动失效（值应设置为大于业务处理的时间，确保在锁有效期内业务能处理完）
+             */
+            boolean res = rLock.tryLock(waitTimeout, leaseTime, TimeUnit.SECONDS);
+            if (res) {
+                //成功获得锁，在这里处理业务
+                System.out.println("get lock success ");
+            }
+            // 可重入锁, 测试是否可重入
+            rLock.tryLock(waitTimeout, leaseTime, TimeUnit.SECONDS);
+            if (res) {
+                System.out.println("可重入锁获取第二次");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("aquire lock fail");
+        } finally {
+            //无论如何, 最后都要解锁
+            rLock.unlock();
+            rLock.unlock();
+            redissonClient.shutdown();
+        }
+    }
 }

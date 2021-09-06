@@ -4,6 +4,7 @@ package com.start.springcloud;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 /**
  * @author fmx
@@ -11,9 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.start.springcloud.*")
 @MapperScan(basePackages = "com.start.springcloud.dao")
-public class Payment8001 {
+@EnableEurekaClient
+public class PaymentApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Payment8001.class, args);
+        SpringApplication.run(PaymentApplication.class, args);
     }
 
 }

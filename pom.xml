@@ -12,6 +12,7 @@
         <module>cloud-provider-payment8001</module>
         <module>clould-consumer-order80</module>
         <module>cloud-common-api</module>
+        <module>cloud-eureka-server7001</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -29,6 +30,7 @@
         <druid.version>1.1.16</druid.version>
         <mybatis.spring.boot.version>2.1.1</mybatis.spring.boot.version>
         <druid.spring.boot.version>1.1.10</druid.spring.boot.version>
+        <redission.version>3.15.0</redission.version>
     </properties>
 
     <!-- 子模块继承之后，提供作用：锁定版本+子modlue不用写groupId和version  -->
@@ -93,6 +95,11 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-all</artifactId>
+                <version>${redission.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -23,10 +23,10 @@
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
         <!--eureka-client-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -99,6 +99,10 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.16</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-all</artifactId>
         </dependency>
     </dependencies>
 
