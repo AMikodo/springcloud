@@ -12,10 +12,8 @@ import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +29,9 @@ public class PaymentController {
     @Autowired
     private TestService testService;
 
+
     @Value("${server.port}")
     private String port;
-
-    @Resource
-    DiscoveryClient discoveryClient;
 
     @PostMapping(path = "/payment/create")
     public CommonResult add(@RequestBody Payment payment) {
@@ -60,21 +56,11 @@ public class PaymentController {
 
 
     }
-
     @GetMapping("payment/test")
     public CommonResult get() {
         Map<String, String> map = testService.test();
         log.info("result is " + map);
         return new CommonResult(200, "success", map);
-    }
-
-    @GetMapping("/payment/discover")
-    public Object discover() {
-        List<String> list = discoveryClient.getServices();
-        list.forEach(System.out::print);
-        discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE").forEach(value -> System.out.println(value.getHost() + value.getPort() + value.getUri()));
-
-        return this.discoveryClient;
     }
 
 //    public static void main(String[] args) throws JsonProcessingException {
