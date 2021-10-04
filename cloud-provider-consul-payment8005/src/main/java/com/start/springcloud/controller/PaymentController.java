@@ -1,7 +1,6 @@
 package com.start.springcloud.controller;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +14,8 @@ public class PaymentController {
     @Value("${server.port}")
     private String port;
 
-    @GetMapping("/getPayment/zk")
+    @GetMapping("/getPayment/consul")
     public String getPayment() {
-        return "by zookeeper " + port + "  " + UUID.randomUUID().toString();
+        return "by consul " + port + "  " + UUID.randomUUID().toString();
     }
 }
